@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+  python-api:
+    build: .
+    ports:
+      - "4000:80"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./
+          target: /app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    depends_on:
+      - db
